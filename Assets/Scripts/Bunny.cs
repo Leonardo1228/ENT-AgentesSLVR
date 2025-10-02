@@ -3,7 +3,8 @@ using UnityEngine;
 public class Bunny : MonoBehaviour
 {
     [Header("Bunny Settings")]
-    public float energy = 10;
+    public float energy = 100;
+    public float maxEnergy = 100;
     public float age = 0;
     public float maxAge = 20;
     public float speed = 1f;
@@ -27,6 +28,8 @@ public class Bunny : MonoBehaviour
 
         this.h = h;
 
+        Metabolism();
+
         EvaluateState();
 
         switch (currentState)
@@ -43,10 +46,14 @@ public class Bunny : MonoBehaviour
             case BunnyState.Fleeing:
                 Flee();
                 break;
+            case BunnyState.Resting:
+                Rest();
+                break;
         }
 
         Move();
         Age();
+        ApplyAgingEffects();
         CheckState();
     }
 
@@ -59,8 +66,15 @@ public class Bunny : MonoBehaviour
             return;
         }
 
+        // 1.5. Si la energía está muy baja -> descansar
+        if (energy < 20f)
+        {
+            currentState = BunnyState.Resting;
+            return;
+        }
+
         // 2. Si la energía está baja -> buscar comida
-        if (energy < 500f)
+        if (energy < 50f)
         {
             Food nearestFood = FindNearestFood();
             if (nearestFood != null)
@@ -166,6 +180,16 @@ public class Bunny : MonoBehaviour
         }
     }
 
+    void Rest()
+    {
+        energy += 5f * h;
+        if(energy >= maxEnergy * 0.8f)
+        {
+            currentState = BunnyState.Exploring;
+        }
+        // Después de descansar, vuelve a explorar
+    }
+
     void SelectNewDestination()
     {
         Vector3 direction = new Vector3(
@@ -205,6 +229,25 @@ public class Bunny : MonoBehaviour
         age += h;
     }
 
+    void Metabolism()
+    {
+        energy -= 0.05f * h;
+        // Formula de proceso de metabolismo del conejo
+    }
+
+    void ApplyAgingEffects()
+    {
+        if((int)age % 10 == 0)
+        {
+            speed = Mathf.Max(0.3f, speed - 0.05f);
+            maxEnergy = Mathf.Max(20f, maxEnergy - 2f);
+
+            if(energy > maxEnergy)
+            {
+                energy = maxEnergy;
+            }
+        }
+    }
     void CheckState()
     {
         if (energy <= 0 || age > maxAge)
