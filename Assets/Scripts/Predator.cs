@@ -1,4 +1,4 @@
-ï»¿using UnityEngine;
+using UnityEngine;
 
 public class Predator : MonoBehaviour
 {
@@ -102,8 +102,8 @@ public class Predator : MonoBehaviour
             currentState = PredatorState.SearchingFood;
             waterDecisionMade = false;
             canCrossWaterThisSearch = false;
+        }
         // Si hay comida a la vista, cambiar de estado a persecución (caza)
-        Bunny nearestBunny = FindNearestBunny();
         if (nearestBunny != null && isResting == false) // Si detecta un conejo cerca y no está descansando...
         {
             startPersecution(nearestBunny); // Inicia la persecución
@@ -186,7 +186,7 @@ public class Predator : MonoBehaviour
 
         if (Vector3.Distance(transform.position, targetBunny.transform.position) < 0.2f)
         //Actualizar destino hacia la presa más cercana
-        destination = nearestBunny.transform.position;
+        destination = targetBunny.transform.position;
 
         // PERSECUCIÓN EN PROCESO
         currentResistance -= resistanceLostSecondPursue * h;  // h es el tiempo de cada paso (1 segundo)
@@ -205,7 +205,7 @@ public class Predator : MonoBehaviour
         }
 
         // Si alcanzó el conejo, pasará al método para comerselo
-        if (Vector3.Distance(transform.position, nearestBunny.transform.position) < 0.2f)
+        if (Vector3.Distance(transform.position, targetBunny.transform.position) < 0.2f)
         {
             currentState = PredatorState.Eating;
         }
