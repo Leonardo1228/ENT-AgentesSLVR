@@ -32,15 +32,10 @@ public class FoodSpawner : MonoBehaviour
     public Vector2 areaSize = new Vector2(20, 20); //Tamaño del área
     private float time = 0f;
 
-    private void Start()
-    {
-        currentInterval = spawnInterval; //Se inicia el intervalo de las estaciones con el que viene la simulacion
     [Header("Zone status")] // Probabilidad para que el terreno sea fertil, árido o normal
     public float fertileZoneChance = 0.7f;
     public float aridZoneChance = 0.2f;
     public float normalZoneChance = 0.1f;
-
-    private float time = 0f;
 
     // Lista en donde se guardan todas las posibles zonas
     private List<Zone> allZones = new List<Zone>();
@@ -50,6 +45,7 @@ public class FoodSpawner : MonoBehaviour
 
     private void Start()
     {
+        currentInterval = spawnInterval; //Se inicia el intervalo de las estaciones con el que viene la simulacion
         // Cuando la simulación empieze, revisará toda el área para saber que terreno tiene y lo guardará
         allZones.AddRange(FindObjectsByType<Zone>(FindObjectsSortMode.InstanceID));
     }
@@ -100,8 +96,6 @@ public class FoodSpawner : MonoBehaviour
                 break;
         }
     }
-
-    void SpawnFood()
     void SpawnFoodDependZone() // GENERADOR DE COMIDA SEGÚN LA ZONA
     {
         Vector2 spawnPos = new Vector2( // Crear una variable para guardar la posición

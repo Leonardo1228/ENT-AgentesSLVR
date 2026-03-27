@@ -379,14 +379,6 @@ public class Predator : MonoBehaviour
         Debug.Log($"Predator {name} encontr� {hits.Length} colliders en su rango");
         Bunny nearest = null; // Inicializa la variable
         float minDist = Mathf.Infinity; // Inicializa la distancia m�nima a infinito
-        Collider2D[] hits = Physics2D.OverlapCircleAll(
-            transform.position,
-            visionRange,
-            LayerMask.GetMask("Bunnies")
-        );
-
-        Bunny nearest = null;
-        float minDist = Mathf.Infinity;
 
         foreach (Collider2D hit in hits)// Se ejecuta para cada collider encontrado
         {
@@ -408,17 +400,6 @@ public class Predator : MonoBehaviour
 
             if (dist < minDist)
             {
-                Vector2 direction = food.transform.position - transform.position; //Ac� se calcula la direcci�n hacia el conejo que va a cazar
-                float dist = direction.magnitude; //Ac� se calcula la distancia hacia el conejo que va a cazar
-                RaycastHit2D rayHit = Physics2D.Raycast(transform.position, direction.normalized, dist, LayerMask.GetMask("Obstacles")); //Ac� se lanza un rayo desde el depredador hacia el conejo para verificar si hay obst�culos en el camino
-                if (rayHit.collider == null) //Si el rayo no choca con ning�n obst�culo, entonces el depredador tiene un camino directo hacia el conejo. Si el rayo choca con un obst�culo, entonces el depredador no puede ver al conejo por el obst�culo que hay en medio
-                {
-                    if (dist < minDist) //Si la distancia hacia el conejo es menor que la distancia m�nima
-                    {
-                        minDist = dist; //Entonces se actualiza la distancia m�nima
-                        nearest = food; //Y se actualiza el conejo m�s cercano
-                    }
-                }
                 minDist = dist;
                 nearest = bunny;
             }
