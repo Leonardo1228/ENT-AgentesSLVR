@@ -13,12 +13,27 @@ public class Bunny : MonoBehaviour
     public bool isAlive = true;
     public BunnyState currentState = BunnyState.Exploring;
 
+    [Header("Mutation")]
+    public GameObject bunnyPrefab;
+
     private Vector3 destination;
     private float h;
 
     private void Start()
     {
         destination = transform.position;
+
+        //PRUEBA TEMPORAL
+       // Bunny[] bunnies = FindObjectsByType<Bunny>(FindObjectsSortMode.None);
+
+        //foreach (var b in bunnies)
+        //{
+        //    if (b != this)
+        //    {
+        //        CreateChildWith(b);
+        //        break;
+        //    }
+        //}
     }
 
     public void Simulate(float h)
@@ -213,6 +228,19 @@ public class Bunny : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    //Mutacion
+    public void CreateChildWith(Bunny partner)
+    {
+        GameObject childObj = Instantiate(bunnyPrefab, transform.position, Quaternion.identity);
+        Bunny child = childObj.GetComponent<Bunny>();
+
+        BunnyMutation.ApplyMutation(child, this, partner);
+
+        //DEBUG (IMPORTANTE)
+        Debug.Log($"Hijo creado -> Speed: {child.speed}, Energy: {child.energy}, Vision: {child.visionRange}");
+    }
+
 
     private void OnDrawGizmosSelected()
     {
