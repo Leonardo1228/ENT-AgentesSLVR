@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3767710201525736342}
   - component: {fileID: 2680347290537495943}
   m_Layer: 0
-  m_Name: Water
+  m_Name: Charco
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
