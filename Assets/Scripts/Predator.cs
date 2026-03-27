@@ -165,31 +165,31 @@ public class Predator : MonoBehaviour
         Gizmos.DrawLine(transform.position, destination);
     }
 
-    Bunny FindNearestBunny()
+    Bunny FindNearestBunny() // Busca al conejo más cercano dentro del rango de visión, considerando obstáculos
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, visionRange, LayerMask.GetMask("Bunnies"));
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, visionRange, LayerMask.GetMask("Bunnies")); // Busca todos los collider dentro del rango de visión
         Debug.Log($"Predator {name} encontró {hits.Length} colliders en su rango");
-        Bunny nearest = null;
-        float minDist = Mathf.Infinity;
+        Bunny nearest = null; // Inicializa la variable
+        float minDist = Mathf.Infinity; // Inicializa la distancia mínima a infinito
 
-        foreach (Collider2D hit in hits)
+        foreach (Collider2D hit in hits)// Se ejecuta para cada collider encontrado
         {
             Bunny food = hit.GetComponent<Bunny>();
             if (food != null)
             {
-                Vector2 direction = food.transform.position - transform.position;
-                float dist = direction.magnitude;
-                RaycastHit2D rayHit = Physics2D.Raycast(transform.position, direction.normalized, dist, LayerMask.GetMask("Obstacles"));
-                if (rayHit.collider == null)
+                Vector2 direction = food.transform.position - transform.position; //Acá se calcula la dirección hacia el conejo que va a cazar
+                float dist = direction.magnitude; //Acá se calcula la distancia hacia el conejo que va a cazar
+                RaycastHit2D rayHit = Physics2D.Raycast(transform.position, direction.normalized, dist, LayerMask.GetMask("Obstacles")); //Acá se lanza un rayo desde el depredador hacia el conejo para verificar si hay obstáculos en el camino
+                if (rayHit.collider == null) //Si el rayo no choca con ningún obstáculo, entonces el depredador tiene un camino directo hacia el conejo. Si el rayo choca con un obstáculo, entonces el depredador no puede ver al conejo por el obstáculo que hay en medio
                 {
-                    if (dist < minDist)
+                    if (dist < minDist) //Si la distancia hacia el conejo es menor que la distancia mínima
                     {
-                        minDist = dist;
-                        nearest = food;
+                        minDist = dist; //Entonces se actualiza la distancia mínima
+                        nearest = food; //Y se actualiza el conejo más cercano
                     }
                 }
             }
         }
-        return nearest;
+        return nearest; //Retornando al conejo más cercano que el depredador puede ver, si no hay niguno entonces manda un null
     }
 }

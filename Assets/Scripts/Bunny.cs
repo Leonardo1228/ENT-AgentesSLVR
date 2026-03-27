@@ -251,31 +251,32 @@ public class Bunny : MonoBehaviour
         return pos;
     }
 
-    Food FindNearestFood()
+    Food FindNearestFood() // Busca la comida más cercana dentro del rango de visión, considerando obstáculos
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, visionRange, LayerMask.GetMask("Food")); 
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, visionRange, LayerMask.GetMask("Food"));  // Busca todos los collider dentro del rango de visión
         Debug.Log($"Bunny {name} encontró {hits.Length} colliders en su rango");
-        Food nearest = null;
-        float minDist = Mathf.Infinity;
+        Food nearest = null; // Inicializa la variable
+        float minDist = Mathf.Infinity; // Inicializa la distancia mínima a infinito
 
-        foreach (Collider2D hit in hits)
+        foreach (Collider2D hit in hits) // Se ejecuta para cada collider encontrado
         {
             Food food = hit.GetComponent<Food>();
             if (food != null)
             {
-                Vector2 direction = food.transform.position - transform.position;
-                float dist = direction.magnitude;
-                RaycastHit2D rayHit = Physics2D.Raycast(transform.position, direction.normalized, dist, LayerMask.GetMask("Obstacles"));
-                if (rayHit.collider == null)
+                Vector2 direction = food.transform.position - transform.position; //Acá se calcula la dirección hacia la comida que va a comer
+                float dist = direction.magnitude; //Acá se calcula la dirección hacia esa misma comida
+                RaycastHit2D rayHit = Physics2D.Raycast(transform.position, direction.normalized, dist, LayerMask.GetMask("Obstacles")); //Acá se lanza un rayo desde el conejo hacia la comida a la que quiere ir
+                if (rayHit.collider == null) //Si el rayo no choca con ningún obstáculo, entonces el conejo tiene un camino directo hacia la comida. Si el rayo choca con un obstáculo, entonces el conejo no puede ver la comida por el obstáculo que hay en medio
                 {
-                    if (dist < minDist)
+                    if (dist < minDist) //Si la distancia hacia la comida es menor que la distancia mínima
                     {
-                        minDist = dist;
-                        nearest = food;
+                        minDist = dist;//Entonces se actualiza la distancia mínima
+                        nearest = food;//Y se actualiza la comida más cercana
                     }
                 }
             }
         }
-        return nearest;
+        return nearest; //Retornando la comida más cercana que el conejo puede ver, si no hay niguno entonces manda un null
+
     }
 }
